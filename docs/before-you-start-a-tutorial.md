@@ -1,5 +1,19 @@
 ---
-layout: page
+layout: default
+nav_order: 2
+# tags used by AI files
+title: Before you start a tutorial
+description: Describes how to configure your local computer to run a local instance of the to-do-service.
+tags: [introduction]
+categories: [tutorial]
+ai_relevance: high
+importance: 9
+prerequisites: []
+related_pages: [/tutorials/add-a-new-task, /tutorials/enroll-a-new-user]
+examples: []
+api_endpoints: []
+version: "v1.0"
+last_updated: "2025-05-08"
 ---
 
 # Before you start a tutorial

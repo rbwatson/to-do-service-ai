@@ -1,5 +1,19 @@
 ---
-layout: page
+layout: default
+nav_order: 1
+# tags used by AI files
+title: To-Do service API overview
+description: Describes the To-Do service for a new user
+tags: [introduction]
+categories: [tutorial]
+ai_relevance: high
+importance: 9
+prerequisites: []
+related_pages: [/before-you-start-a-tutorial /tutorials/add-a-new-task, /tutorials/enroll-a-new-user]
+examples: []
+api_endpoints: []
+version: "v1.0"
+last_updated: "2025-05-08"
 ---
 
 # To-Do service API

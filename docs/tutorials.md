@@ -1,5 +1,21 @@
 ---
-layout: page
+layout: default
+nav_order: 3
+has_children: true
+has_toc: false
+### tags used by AI files
+title: Tutorials
+description: Lists the tutorials available in the documentation
+tags: [introduction]
+categories: [tutorial]
+ai_relevance: high
+importance: 8
+prerequisites: []
+related_pages: [/tutorials/add-a-new-task, /tutorials/enroll-a-new-user]
+examples: []
+api_endpoints: []
+version: "v1.0"
+last_updated: "2025-05-08"
 ---
 
 # Tutorials

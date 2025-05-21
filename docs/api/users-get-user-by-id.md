@@ -1,5 +1,20 @@
 ---
-layout: page
+layout: default
+parent: user resource
+nav_order: 2
+# tags used by AI files
+title: Get a user by ID
+description: GET the `user` resource with the specified ID from the service
+tags: [api]
+categories: [api-reference]
+ai_relevance: high
+importance: 7
+prerequisites: [/api/user]
+related_pages: []
+examples: []
+api_endpoints: [GET /users]
+version: "v1.0"
+last_updated: "2025-05-08"
 ---
 
 # Get user by ID
