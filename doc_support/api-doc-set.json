@@ -1,0 +1,339 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://github.com/rbwatson/to-do-service-sp25/api-doc-set.json",
+    "title": "API Documentation description schema",
+    "description": "Schema to describe API documentation sets for automation",
+    "$defs": {
+        "section": {
+            "type": "object",
+            "properties": {
+                "title": {
+                    "required": true,
+                    "type": "string"
+                },
+                "directory": {
+                    "required": true,
+                    "type": "string"
+                },
+                "overviewTopic": {
+                    "type": "string",
+                    "$comment": "The filename of the overview topic for this section.",
+                    "required": true
+                },
+                "topicSections": {
+                    "type": "array",
+                    "items": { "$ref": "string" }
+                },
+                "topics": {
+                    "type": "array",
+                    "items": { "$ref": "#/$defs/topic" }
+                },
+                "purpose": {
+                    "type": "string",
+                    "$comment": "The purpose of this section."
+                },
+                "audience": {
+                    "type": "string",
+                    "$comment": "The intended audience for this section."
+                },
+                "readerLevel": {
+                    "type": "string",
+                    "$comment": "The reader's knowledge level to inform the detail for this section.",
+                    "enum": ["Introductory", "NewUser", "ExperiencedUser", "AdvancedUser"]
+                }
+            }
+        },
+        "topic": {
+            "type": "object",
+            "properties": {
+                "filename": { "type": "string" },
+                "frontMatter": {
+                    "type": "object",
+                    "properties": {
+                        "title": {
+                            "required": true,
+                            "type": "string"
+                        },
+                        "description": {
+                            "required": true,
+                            "type": "string"
+                        },
+                        "tags": {
+                            "type": "array",
+                            "items": { "type": "string" }
+                        },
+                        "categories": {
+                            "type": "array",
+                            "items": { "type": "string" }
+                        },
+                        "ai_relevance": {
+                            "type": "string",
+                            "enum": ["low", "medium", "high"]
+                        },
+                        "importance": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 10
+                        },
+                        "prerequisites": {
+                            "type": "array",
+                            "items": { "type": "string" }
+                        },
+                        "related_pages": {
+                            "type": "array",
+                            "items": { "type": "string" }
+                        },
+                        "examples": {
+                            "type": "array",
+                            "items": { "type": "string" }
+                        },
+                        "api_endpoints": {
+                            "type": "array",
+                            "items": { "type": "string" }
+                        },
+                        "version": {
+                            "type": "string",
+                            "default": "v1.0"
+                        },
+                        "last_updated": {
+                            "$comment": "When generating content, replace a value of $today with the current date", 
+                            "type": "string",
+                            "default": "$today"
+                        },
+                        "ai-generated": {
+                            "type": "boolean",
+                            "default": false,
+                            "required": true
+                        },
+                        "ai-generated-by": {
+                            "type": "string",
+                            "default": "none"
+                        },
+                        "ai-generated-date": {
+                            "$comment": "When generating content, replace a value of $today with the current date", 
+                            "type": "string",
+                            "default": "$today"
+                        },
+                        "parent": {
+                            "$comment": "When generating definitions, if value is $sectionTopic, assign the filename of the section's overview topic.", 
+                            "type": "string",
+                            "default": "$sectionTopic"
+                        },
+                        "has_toc": {
+                            "$comment": "Set to true if the topic has child topics that you want to display in a TOC.", 
+                            "type": "boolean",
+                            "default": false
+                        },
+                        "nav_order": {
+                            "$comment": "When generating definitions, replace a value of $pos with the current position in the array, starting from 1.", 
+                            "type": "string",
+                            "default": "$pos"
+                        }                        
+                    },
+                    "required": ["title", "description", "ai-generated"],
+                    "dependentRequired": {
+                        "ai-generated": ["ai-generated-by", "ai-generated-date"]
+                    },
+                    "allOf": [
+                        {
+                            "if": {
+                                "properties": { "ai-generated": { "const": false } }
+                            },
+                            "then": {
+                                "not": {
+                                    "required": ["ai-generated-by", "ai-generated-date"]
+                                }
+                            }
+                        }
+                    ]
+                }
+            }
+        },
+        "styleGuideFiles": {
+            "type": "array",
+            "items": {
+                "type": "string",
+                "format": "uri",
+                "$comment": "A list of URLs or file paths for style guides to use in documentation."
+            }
+        },
+        "contentDetails": {
+            "type": "object",
+            "properties": {
+                "importanceDetail": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "type": "string",
+                        "$comment": "A description of the level of detail required for topics with this importance level."
+                    },
+                    "$comment": "Maps importance levels to descriptions of the expected content depth."
+                },
+                "audienceDetail": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "type": "string",
+                        "$comment": "A description of the audience type and their expectations."
+                    },
+                    "$comment": "Maps audience types to descriptions."
+                },
+                "readerLevelDetail": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "type": "string",
+                        "$comment": "A description of the reader level and the expected content depth."
+                    },
+                    "$comment": "Maps reader levels to descriptions."
+                },
+                "codeExampleScopeDetail": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "type": "string",
+                        "$comment": "A description of the code example scope and its intended use."
+                    },
+                    "$comment": "Maps code example scopes to descriptions."
+                }
+            },
+            "$comment": "Details about how to write the content for each topic."
+        },
+        "codeExampleScope": {
+            "type": "string",
+            "enum": ["basic", "standard", "advanced"],
+            "$comment": "The default code example scope and detail to use in all topics, unless overridden."
+        },
+        "errorExampleScope": {
+            "type": "string",
+            "enum": ["basic", "standard", "advanced"],
+            "$comment": "The default error example scope and detail to use in all topics, unless overridden."
+        },
+        "errorExampleScopeDetail": {
+            "type": "object",
+            "additionalProperties": {
+                "type": "string",
+                "$comment": "A description of the error example scope and its intended use."
+            },
+            "$comment": "Maps error example scopes to descriptions."
+        },
+        "topicRelationships": {
+            "type": "object",
+            "properties": {
+                "parentPages": {
+                    "type": "object",
+                    "properties": {
+                        "purpose": {
+                            "type": "string",
+                            "$comment": "Explains the purpose of parent pages."
+                        },
+                        "implementation": {
+                            "type": "string",
+                            "$comment": "Provides guidance on how to implement parent pages."
+                        }
+                    },
+                    "$comment": "Describes how to relate child topics to their parent pages."
+                },
+                "crossReferences": {
+                    "type": "object",
+                    "properties": {
+                        "purpose": {
+                            "type": "string",
+                            "$comment": "Explains the purpose of cross-references."
+                        },
+                        "implementation": {
+                            "type": "string",
+                            "$comment": "Provides guidance on how to implement cross-references."
+                        }
+                    },
+                    "$comment": "Describes how to connect related topics."
+                },
+                "conceptRepetition": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "type": "string",
+                        "$comment": "Describes how to repeat concepts based on the audience."
+                    },
+                    "$comment": "Maps audience types (e.g., Introductory, NewUser) to descriptions of concept repetition."
+                }
+            },
+            "$comment": "Describes how topics relate to each other."
+        }
+    },
+    "type": "object",
+    "properties": {
+        "global": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "apiSpec": {
+                    "type": "string",
+                    "$comment": "The API specification file to use for generating the documentation."
+                },
+                "aiPrompt": {
+                    "type": "string",
+                    "$comment": "Prompt to use for AI generation of content."
+                },
+                "aiModel": {
+                    "type": "string",
+                    "$comment": "Model to use for AI generation of content."
+                },
+                "aiModelVersion": {
+                    "type": "string",
+                    "$comment": "Version of the model to use for AI generation of content."
+                },
+                "exampleLanguages": {
+                    "type": "array",
+                    "items": { "type": "string" }
+                },
+                "styleGuideFiles": {
+                    "$ref": "#/$defs/styleGuideFiles"
+                },
+                "contentDetails": {
+                    "$ref": "#/$defs/contentDetails"
+                },
+                "frontMatter": {
+                    "$comment": "Add global front matter to every topic unless the topic defines that property.", 
+                    "type": "object",
+                    "properties": {
+                        "layout": {
+                            "type": "string",
+                            "default": "default"
+                        },
+                        "version": {
+                            "type": "string",
+                            "default": "v1.0.0"
+                        },
+                        "lastUpdated": {
+                            "type": "string",
+                            "default": "$today"
+                        }
+                    }
+                },
+                "codeExampleScope": {
+                    "$ref": "#/$defs/codeExampleScope"
+                },
+                "errorExampleScope": {
+                    "$ref": "#/$defs/errorExampleScope"
+                },
+                "errorExampleScopeDetail": {
+                    "$ref": "#/$defs/errorExampleScopeDetail"
+                },
+                "topicRelationships": {
+                    "$ref": "#/$defs/topicRelationships"
+                }
+            }
+        },
+        "content": {
+            "type": "object",
+            "properties": {
+                "topics": {
+                    "type": "array",
+                    "items": { "$ref": "#/$defs/topic" }
+                },
+                "sections": {
+                    "type": "array",
+                    "items": { "$ref": "#/$defs/section" }
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,10 @@
+{
+  "name": "api-docs-generator",
+  "version": "1.0.0",
+  "description": "Generate API documentation from OpenAPI spec",
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.6.2",
+    "@apidevtools/swagger-parser": "^10.1.0",
+    "js-yaml": "^4.1.0"
+  }
+}

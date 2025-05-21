@@ -1,0 +1,45 @@
+name: Generate API Documentation
+
+on:
+  push:
+    paths:
+      - 'api/to-do-service-spec.yaml'
+      - 'doc_support/_ai_doc_set.yaml'
+  workflow_dispatch:
+    inputs:
+      test_mode:
+        description: 'Run in test mode'
+        required: true
+        default: false
+        type: boolean
+
+jobs:
+  generate-docs:
+    runs-on: ubuntu-latest
+    env:
+      # Set TEST_MODE from workflow dispatch input, or default to false
+      TEST_MODE: ${{ github.event.inputs.test_mode || 'false' }}
+      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          
+      - name: Install dependencies
+        run: npm install @anthropic-ai/sdk openapi-parser js-yaml
+        
+      - name: Generate documentation files
+        run: node scripts/generate-docs.js
+        
+      - name: Run Vale linter
+        uses: errata-ai/vale-action@v2
+        with:
+          files: docs/
+        
+      - name: Build and deploy Jekyll site
+        uses: actions/jekyll-build-pages@v1

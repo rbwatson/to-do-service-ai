@@ -1,0 +1,795 @@
+global:
+  name: "Task Management API Documentation"
+  # AI-HINT apiSpec value is a link to the OpenAPI that is the authoritative source of truth for the API.
+  apiSpec: "https://raw.githubusercontent.com/rbwatson/to-do-service-ai/refs/heads/initialize-ai/api/to-do-service-spec.yaml"
+  # AI-HINT apiPrompt contains the prompt to use to generate the API documentation.
+  aiPrompt: |
+    You are a technical writer tasked with documenting the Task Management API.
+
+    ## STEP 1: OAS ANALYSIS
+    1. Parse and analyze the OpenAPI specification (OAS) at the URL in 'apiSpec'.
+    2. Create a complete inventory of all elements EXPLICITLY defined in the OAS:
+      - Endpoints (paths and operations)
+      - HTTP methods for each endpoint
+      - Request parameters (path, query, header)
+      - Request bodies and their schemas
+      - Response schemas for each status code
+      - Error codes and their response formats
+    3. Note any API features explicitly defined in the OAS:
+      - Pagination mechanisms (if any)
+      - Filtering capabilities (if any)
+      - Sorting parameters (if any)
+      - Authentication requirements
+    4. CRITICAL: You may ONLY document API elements that appear in this inventory - no exceptions.
+
+    ## CONTENT CREATION GUIDELINES
+    - For topics with "ai-generated: true": Create comprehensive documentation including usage instructions, endpoint references, and best practices - strictly limited to what's in the OAS.
+    - For topics with "ai-generated: false": Create only the front-matter and a detailed content outline with suggestions for topics, images, or tables that would be helpful.
+
+    ## SOURCE AND STYLE REQUIREMENTS
+    - Use ONLY the OpenAPI specification in 'apiSpec' as the authoritative source for all API details.
+    - Write at approximately 8th grade reading level following style guidelines in the files listed in 'styleGuideFiles'.
+    - If uncertain whether a feature exists in the OAS, exclude it rather than assuming its existence.
+
+    ## LINK FORMATTING REQUIREMENTS
+    - All internal documentation links MUST be relative to the current file, never absolute.
+    - NEVER use links that start with a forward slash (/).
+    - For links to other documentation pages:
+      * Same directory: Use just the filename (e.g., "pagination.md")
+      * Child directory: Use directory/filename (e.g., "resources/user-resource.md")
+      * Parent directory: Use ../directory/filename (e.g., "../resources/user-resource.md")
+    - Examples:
+      * CORRECT: From "api-reference/get-all-users.md" to "resources/user-resource.md", use "../resources/user-resource.md"
+      * INCORRECT: "/resources/user-resource.md" (absolute path, starts with slash)
+
+    ## STRUCTURE AND RELATIONSHIPS
+    - Follow the exact section structure in 'topicSections' for API reference topics.
+    - Implement relationships between topics according to 'topicRelationships' guidelines.
+    - For code examples:
+      * Use ONLY the languages listed in 'codeExampleLanguages'
+      * Follow the detail level specified in 'codeExampleScope' 
+      * For error examples, follow the detail level in 'errorExampleScope'
+    - Adjust content depth based on the topic's:
+      * 'importance' value (see importanceDetail definitions)
+      * 'audience' target (see audienceDetail definitions)
+      * 'readerLevel' setting (see readerLevelDetail definitions)
+
+    ## DOCUMENTATION CONSTRAINTS
+    - All API elements must exactly match the OAS:
+      * Use exact endpoint paths and HTTP methods
+      * Use exact parameter names, types, and descriptions
+      * Use exact request/response schemas
+      * Use only status codes defined in the OAS
+    - Do not document any API features not explicitly defined in the OAS.
+    - Code examples must use only parameters and fields from the OAS.
+    - Error examples must use only error codes and formats from the OAS.
+
+    ## VERIFICATION PROCESS
+    1. After drafting each section, compare it against your OAS inventory.
+    2. Verify every API element mentioned is present in the OAS inventory.
+    3. Remove any content that references API elements not found in the OAS.
+    4. Double-check all examples use only parameters and fields from the OAS.
+
+    ## FILE OUTPUT REQUIREMENTS
+    - Write all content in one file named "all-docs.md".
+    - Start each topic with "--- FILE: directory/filename.md ---".
+    - Use markdown for content and YAML for Jekyll front matter.
+
+    ## FORMATTING REQUIREMENTS
+    - Place topics from content:topics: in the root documentation directory.
+    - Replace $pos in navOrder with the 1-based index in the array.
+    - Replace $today with the current date.
+
+  aiModel: "Claude 3.7 Sonnet"
+  aiModelVersion: "3.7"
+  styleGuideFiles:
+    # AI-HINT styleGuideFiles is a list of files that contain hints on language and vocabulary to use in the documentation.
+    - "https://raw.githubusercontent.com/rbwatson/to-do-service-vale/refs/heads/ai-styles/.github/valeStyleSummaries/Google.txt"
+  codeExampleLanguages:
+    # AI-HINT exampleLanguages describes the languages to create code examples for.
+    - "JavaScript"
+    - "Python"
+    - "cURL"
+  codeExampleScope: basic
+    # AI-HINT   codeExampleScope is the default code example scope and detail to use in all topics, unless overridden.
+  errorExampleScope: basic
+    # AI-HINT   errorExampleScope is the default error example scope and detail to use in all topics, unless overridden.
+  contentDetails:
+    # AI-HINT contentDetails describe how to write the content for each topic.
+    importanceDetail:
+      # AI-HINT importanceDetail relates to the frontMatter property: importance.
+      10: "Critical information that all users should know. Provide comprehensive details including edge cases and extended examples."
+      9: "Important information that most users should know."
+      8: "Useful information that some users may find helpful."
+      7: "Additional information that may be helpful to some users."
+      6: "Optional information that may be helpful to some users."
+      5: "Informational content that is not critical to the user experience."
+      4: "Informational content that is not critical to the user experience."
+      3: "Informational content that is not critical to the user experience."
+      2: "Informational content that is not critical to the user experience."
+      1: "Informational content that is not critical to the user experience."
+    audienceDetail:
+      # AI-HINT audienceDetail relates to the section property: audience.
+      NewUser: "New users who are just getting started with the API."
+      ExperiencedUser: "Experienced users who are familiar with the API and want to learn more."
+      BusinessDecisionMaker: "Business decision makers who are evaluating the API for their organization."
+    readerLevelDetail:
+      # AI-HINT readerLevel relates to the section property: readerLevel.
+      Introductory: "Introductory level content for new users."
+      NewUser: "New user level content for users who are just getting started."
+      ExperiencedUser: "Experienced user level content for users who are familiar with the API."
+      AdvancedUser: "Advanced user level content for users with considerable experienced with the API."
+    codeExampleScopeDetail:
+      # AI-HINT codeExampleScopeDetail relates to the global property: codeExampleScope.
+      basic: "Show simplest working example of endpoint usage"
+      standard: "Include error handling and common options"
+      advanced: "Demonstrate integration with related endpoints in practical workflows"
+    errorExampleScopeDetail:
+      # AI-HINT errorExampleScopeDetail relates to the global property: errorExampleScope.
+      basic: "Show simplest working example of most common errors"
+      standard: "Show examples of all error codes listed in the OpenAPI spec"
+      advanced: "Show edge cases and integration with related endpoints in practical workflows" 
+  topicRelationships:
+    # AI-HINT topicRelationships describes how to relate topics to each other.
+    parentPages:
+      # AI-HINT parentPages describes how to relate child topics to their parent pages.
+      purpose: "Provide concise overview of child topics with clear navigation"
+      implementation: "Include a table or list of all child pages with brief, 1 or 2 sentence descriptions"      
+    crossReferences:
+      # AI-HINT crossReferences describes how to relate topics to each other.
+      purpose: "Connect related concepts throughout documentation"
+      implementation: "Use 'See also' sections and inline links to reference related topics"
+    conceptRepetition:
+      # AI-HINT conceptRepetition describes how to relate topics to each other based on their audience
+      Introductory: "Introduce concepts in a simple way, with links to more detailed explanations" 
+      NewUser: "Introduce essential concepts briefly where needed, with links to full explanation"
+      ExperiencedUser: "Assume familiarity with core concepts, but provide links to detailed explanations"
+      AdvancedUser: "Assume familiarity with all concepts, but provide links to detailed explanations"
+  frontMatter:
+    # AI-HINT Add these proprties to the front matter of each topic, unless overridden in the topic.
+    layout: "default"
+    version: "v1.0.0"
+    lastUpdated: "$today"
+
+content:
+  topics:
+    - filename: "index.md"
+      frontMatter:
+        title: "Task Management API Documentation"
+        description: "Comprehensive guide to the Task Management API, including usage, endpoints, and best practices."
+        tags: ["API", "documentation", "task management"]
+        categories: ["overview"]
+        importance: 10
+        ai-generated: true
+        ai-generated-by: "Claude 3.7 Sonnet"
+        ai-generated-date: "$today"
+        nav_exclude: true
+
+    - filename: "getting-started.md"
+      frontMatter:
+        title: "Getting Started with the Task Management API"
+        description: "Introduction to getting started with the Task Management API, including setup, authentication, and basic concepts."
+        tags: ["introduction", "overview", "getting-started"]
+        categories: ["getting-started"]
+        importance: 10
+        has_toc: false
+        ai-generated: true
+        ai-generated-by: "Claude 3.7 Sonnet"
+        ai-generated-date: "$today"
+        nav_order: "2"
+        
+    - filename: "core-concepts.md"
+      frontMatter:
+        title: "Core Concepts"
+        description: "Overview of fundamental concepts in the Task Management API, including data model, pagination, sorting, error handling, and task statuses."
+        tags: ["concepts", "overview"]
+        categories: ["core-concepts"]
+        importance: 9
+        has_toc: false
+        ai-generated: true
+        ai-generated-by: "Claude 3.7 Sonnet"
+        ai-generated-date: "$today"
+        nav_order: "3"
+        
+    - filename: "resources.md"
+      frontMatter:
+        title: "API Resources"
+        description: "Detailed information about the core resources available in the Task Management API."
+        tags: ["resources", "overview"]
+        categories: ["resources"]
+        importance: 9
+        has_toc: false
+        ai-generated: true
+        ai-generated-by: "Claude 3.7 Sonnet"
+        ai-generated-date: "$today"
+        nav_order: "4"
+        
+    - filename: "api-reference.md"
+      frontMatter:
+        title: "API Reference"
+        description: "Comprehensive reference documentation for all endpoints in the Task Management API."
+        tags: ["reference", "endpoints", "api"]
+        categories: ["api-reference"]
+        importance: 8
+        has_toc: false
+        ai-generated: true
+        ai-generated-by: "Claude 3.7 Sonnet"
+        ai-generated-date: "$today"
+        nav_order: "5"
+        
+    - filename: "tutorials.md"
+      frontMatter:
+        title: "Tutorials & Guides"
+        description: "Step-by-step tutorials and practical guides for working with the Task Management API."
+        tags: ["tutorials", "guides", "how-to"]
+        categories: ["tutorials"]
+        importance: 7
+        has_toc: false
+        ai-generated: true
+        ai-generated-by: "Claude 3.7 Sonnet"
+        ai-generated-date: "$today"
+        nav_order: "6"
+        
+    - filename: "advanced.md"
+      frontMatter:
+        title: "Advanced Topics"
+        description: "Advanced considerations for working with the Task Management API, including optimization, security, and data consistency."
+        tags: ["advanced", "optimization", "security"]
+        categories: ["advanced"]
+        importance: 6
+        has_toc: false
+        ai-generated: true
+        ai-generated-by: "Claude 3.7 Sonnet"
+        ai-generated-date: "$today"
+        nav_order: "7"
+        
+    - filename: "developer-resources.md"
+      frontMatter:
+        title: "Developer Resources"
+        description: "Additional resources for developers working with the Task Management API, including changelogs, tooling, and code examples."
+        tags: ["resources", "developers", "tools"]
+        categories: ["developer-resources"]
+        importance: 5
+        has_toc: false
+        ai-generated: true
+        ai-generated-by: "Claude 3.7 Sonnet"
+        ai-generated-date: "$today"
+        nav_order: "8"
+        
+    - filename: "support.md"
+      frontMatter:
+        title: "Support & FAQ"
+        description: "Support resources, frequently asked questions, and troubleshooting information for the Task Management API."
+        tags: ["support", "faq", "help", "troubleshooting"]
+        categories: ["support"]
+        importance: 4
+        has_toc: false
+        ai-generated: true
+        ai-generated-by: "Claude 3.7 Sonnet"
+        ai-generated-date: "$today"
+        nav_order: "9"
+
+  sections:
+    - title: "Getting Started"
+      directory: "getting-started"
+      purpose: "Introduction to the Task Management API, including setup, authentication, and basic concepts."
+      audience: "Business decision makers and developers who are new to the Task Management API."
+      readerLevel: Introductory
+      topics:
+        - filename: "introduction.md"
+          frontMatter:
+            title: "Introduction to the Task Management API"
+            description: "Overview of the Task Management API capabilities, features, and use cases."
+            tags: ["introduction", "overview"]
+            categories: ["getting-started"]
+            importance: 10
+            parent: "Getting Started"
+            ai-generated: true
+            ai-generated-by: "Claude 3.7 Sonnet"
+            ai-generated-date: "$today"
+            nav_order: "$pos"
+            
+        - filename: "quickstart.md"
+          frontMatter:
+            title: "Quick start guide"
+            description: "Get up and running with the Task Management API in minutes."
+            tags: ["quick start", "tutorial"]
+            categories: ["getting-started"]
+            importance: 9
+            parent: "Getting Started"
+            ai-generated: true
+            ai-generated-by: "Claude 3.7 Sonnet"
+            ai-generated-date: "$today"
+            nav_order: "$pos"
+            
+        - filename: "authentication.md"
+          frontMatter:
+            title: "Authentication"
+            description: "Learn how to authenticate your requests to the Task Management API using bearer tokens."
+            tags: ["authentication", "security", "bearer token"]
+            categories: ["getting-started"]
+            importance: 8
+            parent: "Getting Started"
+            ai-generated: true
+            ai-generated-by: "Claude 3.7 Sonnet"
+            ai-generated-date: "$today"
+            nav_order: "$pos"
+            
+        - filename: "rate-limiting.md"
+          frontMatter:
+            title: "Rate limiting"
+            description: "Understand the API's rate limits and how to handle rate limiting responses."
+            tags: ["rate limiting", "throttling"]
+            categories: ["getting-started"]
+            importance: 7
+            parent: "Getting Started"
+            ai-generated: false
+            nav_order: "$pos"
+            
+    - title: "Core Concepts"
+      directory: "core-concepts"
+      purpose: "Overview of fundamental concepts in the Task Management API, including data model, pagination, sorting, error handling, and task statuses."
+      audience: "Developers and technical users who need to understand the core concepts of the API."
+      readerLevel: NewUser
+      topics:
+        - filename: "data-model.md"
+          frontMatter:
+            title: "Data model"
+            description: "Overview of the core resources in the Task Management API and their relationships."
+            tags: ["data model", "resources", "schema"]
+            categories: ["core-concepts"]
+            importance: 9
+            parent: "Core Concepts"
+            ai-generated: true
+            ai-generated-by: "Claude 3.7 Sonnet"
+            ai-generated-date: "$today"
+            nav_order: "$pos"
+            
+        - filename: "pagination.md"
+          frontMatter:
+            title: "Pagination"
+            description: "How to navigate through large collections of resources using pagination parameters."
+            tags: ["pagination", "collection"]
+            categories: ["core-concepts"]
+            importance: 7
+            parent: "Core Concepts"
+            ai-generated: true
+            ai-generated-by: "Claude 3.7 Sonnet"
+            ai-generated-date: "$today"
+            nav_order: "$pos"
+            
+        - filename: "sorting.md"
+          frontMatter:
+            title: "Sorting"
+            description: "How to sort API results using sort parameters."
+            tags: ["sorting", "collection"]
+            categories: ["core-concepts"]
+            importance: 6
+            parent: "Core Concepts"
+            ai-generated: true
+            ai-generated-by: "Claude 3.7 Sonnet"
+            ai-generated-date: "$today"
+            nav_order: "$pos"
+            
+        - filename: "error-handling.md"
+          frontMatter:
+            title: "Error handling"
+            description: "Common error patterns and best practices for handling errors in the Task Management API."
+            tags: ["errors", "troubleshooting"]
+            categories: ["core-concepts"]
+            importance: 8
+            parent: "Core Concepts"
+            ai-generated: true
+            ai-generated-by: "Claude 3.7 Sonnet"
+            ai-generated-date: "$today"
+            nav_order: "$pos"
+            
+        - filename: "task-status-lifecycle.md"
+          frontMatter:
+            title: "Task status lifecycle"
+            description: "Understanding the various status values that tasks can have and their transitions."
+            tags: ["task status", "workflow"]
+            categories: ["core-concepts"]
+            importance: 7
+            parent: "Core Concepts"
+            ai-generated: true
+            ai-generated-by: "Claude 3.7 Sonnet"
+            ai-generated-date: "$today"
+            nav_order: "$pos"
+    
+    - title: "API Resources"
+      directory: "resources"
+      purpose: "An overview of the core resources available in the Task Management API."
+      audience: "Developers and technical users who want to use the resources available in the API."
+      readerLevel: NewUser
+      topics:
+        - filename: "user-resource.md"
+          frontMatter:
+            title: "User resource"
+            description: "Detailed information about the User resource, its properties, and related endpoints."
+            tags: ["user", "resource"]
+            categories: ["resources"]
+            importance: 9
+            parent: "API Resources"
+            related_pages: ["get-all-users", "create-user", "get-user-by-id", "update-user", "delete-user"]
+            api_endpoints: ["/users", "/users/{userId}"]
+            ai-generated: true
+            ai-generated-by: "Claude 3.7 Sonnet"
+            ai-generated-date: "$today"
+            nav_order: "$pos"
+            
+        - filename: "task-resource.md"
+          frontMatter:
+            title: "Task resource"
+            description: "Detailed information about the Task resource, its properties, and related endpoints."
+            tags: ["task", "resource"]
+            categories: ["resources"]
+            importance: 9
+            parent: "API Resources"
+            related_pages: ["get-all-tasks", "create-task", "get-task-by-id", "update-task", "delete-task"]
+            api_endpoints: ["/tasks", "/tasks/{taskId}"]
+            ai-generated: true
+            ai-generated-by: "Claude 3.7 Sonnet"
+            ai-generated-date: "$today"
+            nav_order: "$pos"
+            
+    - title: "API Reference"
+      directory: "api-reference"
+      purpose: "Comprehensive reference documentation for all endpoints in the Task Management API."
+      audience: "Developers and technical users who are using the API endpoints in their applications."
+      readerLevel: NewUser
+      topicSections:
+        # AI-HINT Generate the topic sections in the order they are listed in topicSections.
+        - Endpoint
+        - Path parameters
+        - Request example
+        - Response
+        - Authentication
+        - Important considerations
+        - Best practices
+        - Code examples
+        - Related resources
+        - See also
+
+      topics:
+        - filename: "error-responses.md"
+          frontMatter:
+            title: "Error responses"
+            description: "Reference documentation for all error responses returned by the API."
+            tags: ["errors", "reference"]
+            categories: ["api-reference"]
+            importance: 8
+            parent: "API Reference" 
+            ai-generated: true
+            ai-generated-by: "Claude 3.7 Sonnet"
+            ai-generated-date: "$today"
+            nav_order: "$pos"
+            
+        - filename: "get-all-users.md"
+          frontMatter:
+            title: "Get all users"
+            description: "API endpoint to retrieve a list of all users with pagination and sorting support."
+            tags: ["users", "endpoint", "GET"]
+            categories: ["api-reference"]
+            importance: 7
+            api_endpoints: ["/users"]
+            related_pages: ["user-resource", "pagination", "sorting"]
+            parent: "API Reference" 
+            ai-generated: true
+            ai-generated-by: "Claude 3.7 Sonnet"
+            ai-generated-date: "$today"
+            nav_order: "$pos"
+            
+        - filename: "create-user.md"
+          frontMatter:
+            title: "Create a user"
+            description: "API endpoint to create a new user in the system."
+            tags: ["users", "endpoint", "POST"]
+            categories: ["api-reference"]
+            importance: 7
+            api_endpoints: ["/users"]
+            related_pages: ["user-resource"]
+            parent: "API Reference" 
+            ai-generated: true
+            ai-generated-by: "Claude 3.7 Sonnet"
+            ai-generated-date: "$today"
+            nav_order: "$pos"
+            
+        - filename: "get-user-by-id.md"
+          frontMatter:
+            title: "Get user by ID"
+            description: "API endpoint to retrieve a specific user by their unique identifier."
+            tags: ["users", "endpoint", "GET"]
+            categories: ["api-reference"]
+            importance: 7
+            api_endpoints: ["/users/{userId}"]
+            related_pages: ["user-resource"]
+            parent: "API Reference" 
+            ai-generated: true
+            ai-generated-by: "Claude 3.7 Sonnet"
+            ai-generated-date: "$today"
+            nav_order: "$pos"
+            
+        - filename: "update-user.md"
+          frontMatter:
+            title: "Update a user"
+            description: "API endpoint to update an existing user's information."
+            tags: ["users", "endpoint", "PATCH"]
+            categories: ["api-reference"]
+            importance: 7
+            api_endpoints: ["/users/{userId}"]
+            related_pages: ["user-resource"]
+            parent: "API Reference" 
+            ai-generated: true
+            ai-generated-by: "Claude 3.7 Sonnet"
+            ai-generated-date: "$today"
+            nav_order: "$pos"
+            
+        - filename: "delete-user.md"
+          frontMatter:
+            title: "Delete a user"
+            description: "API endpoint to remove a user from the system."
+            tags: ["users", "endpoint", "DELETE"]
+            categories: ["api-reference"]
+            importance: 7
+            api_endpoints: ["/users/{userId}"]
+            related_pages: ["user-resource"]
+            parent: "API Reference" 
+            ai-generated: true
+            ai-generated-by: "Claude 3.7 Sonnet"
+            ai-generated-date: "$today"
+            nav_order: "$pos"
+            
+        - filename: "get-all-tasks.md"
+          frontMatter:
+            title: "Get all tasks"
+            description: "API endpoint to retrieve a list of all tasks with pagination, sorting, and filtering options."
+            tags: ["tasks", "endpoint", "GET"]
+            categories: ["api-reference"]
+            importance: 7
+            api_endpoints: ["/tasks"]
+            related_pages: ["task-resource", "pagination", "sorting", "task-status-lifecycle"]
+            parent: "API Reference" 
+            ai-generated: true
+            ai-generated-by: "Claude 3.7 Sonnet"
+            ai-generated-date: "$today"
+            nav_order: "$pos"
+            
+        - filename: "create-task.md"
+          frontMatter:
+            title: "Create a task"
+            description: "API endpoint to create a new task in the system."
+            tags: ["tasks", "endpoint", "POST"]
+            categories: ["api-reference"]
+            importance: 7
+            api_endpoints: ["/tasks"]
+            related_pages: ["task-resource", "task-status-lifecycle"]
+            parent: "API Reference" 
+            ai-generated: true
+            ai-generated-by: "Claude 3.7 Sonnet"
+            ai-generated-date: "$today"
+            nav_order: "$pos"
+            
+        - filename: "get-task-by-id.md"
+          frontMatter:
+            title: "Get task by ID"
+            description: "API endpoint to retrieve a specific task by its unique identifier."
+            tags: ["tasks", "endpoint", "GET"]
+            categories: ["api-reference"]
+            importance: 7
+            api_endpoints: ["/tasks/{taskId}"]
+            related_pages: ["task-resource"]
+            parent: "API Reference" 
+            ai-generated: true
+            ai-generated-by: "Claude 3.7 Sonnet"
+            ai-generated-date: "$today"
+            nav_order: "$pos"
+            
+        - filename: "update-task.md"
+          frontMatter:
+            title: "Update a task"
+            description: "API endpoint to update an existing task's information, including changing its status."
+            tags: ["tasks", "endpoint", "PATCH"]
+            categories: ["api-reference"]
+            importance: 7
+            api_endpoints: ["/tasks/{taskId}"]
+            related_pages: ["task-resource", "task-status-lifecycle"]
+            parent: "API Reference" 
+            ai-generated: true
+            ai-generated-by: "Claude 3.7 Sonnet"
+            ai-generated-date: "$today"
+            nav_order: "$pos"
+            
+        - filename: "delete-task.md"
+          frontMatter:
+            title: "Delete a task"
+            description: "API endpoint to remove a task from the system."
+            tags: ["tasks", "endpoint", "DELETE"]
+            categories: ["api-reference"]
+            importance: 7
+            api_endpoints: ["/tasks/{taskId}"]
+            related_pages: ["task-resource"]
+            parent: "API Reference" 
+            ai-generated: true
+            ai-generated-by: "Claude 3.7 Sonnet"
+            ai-generated-date: "$today"
+            nav_order: "$pos"
+            
+    - title: "Tutorials & Guides"
+      directory: "tutorials"
+      purpose: "Step-by-step tutorials and practical guides for working with the Task Management API."
+      audience: "Developers and technical users who want to learn how to use the API effectively."
+      readerLevel: NewUser
+      topics:
+        - filename: "getting-started-with-users.md"
+          frontMatter:
+            title: "Getting started with users"
+            description: "A practical guide to creating, listing, updating, and deleting users in the Task Management API."
+            tags: ["tutorial", "users"]
+            categories: ["tutorials"]
+            importance: 6
+            parent: "Tutorials & Guides" 
+            ai-generated: true
+            ai-generated-by: "Claude 3.7 Sonnet"
+            ai-generated-date: "$today"
+            nav_order: "$pos"
+            
+        - filename: "task-management-workflow.md"
+          frontMatter:
+            title: "Task management workflow"
+            description: "A guide to implementing a complete task management workflow using the API, from creation to completion."
+            tags: ["tutorial", "tasks", "workflow"]
+            categories: ["tutorials"]
+            importance: 6
+            parent: "Tutorials & Guides" 
+            ai-generated: true
+            ai-generated-by: "Claude 3.7 Sonnet"
+            ai-generated-date: "$today"
+            nav_order: "$pos"
+            
+        - filename: "implementing-reminders.md"
+          frontMatter:
+            title: "Implementing reminders"
+            description: "How to use the warningOffset property to implement a reminder system for tasks approaching their due date."
+            tags: ["tutorial", "reminders"]
+            categories: ["tutorials"]
+            importance: 5
+            parent: "Tutorials & Guides" 
+            ai-generated: false
+            nav_order: "$pos"
+            
+        - filename: "integration-patterns.md"
+          frontMatter:
+            title: "Integration patterns"
+            description: "Common patterns for integrating the Task Management API with other systems and services."
+            tags: ["integration", "architecture"]
+            categories: ["tutorials"]
+            importance: 6
+            parent: "Tutorials & Guides" 
+            ai-generated: false
+            nav_order: "$pos"
+            
+    - title: "Advanced Topics"
+      directory: "advanced"
+      purpose: "Advanced considerations for working with the Task Management API, including optimization, security, and data consistency."
+      audience: "Developers and technical users who are experienced with the API and want to explore advanced topics."
+      readerLevel: ExperiencedUser
+      topics:
+        - filename: "optimizing-api-usage.md"
+          frontMatter:
+            title: "Optimizing API usage"
+            description: "Best practices for efficient API usage, including caching, batch operations, and performance considerations."
+            tags: ["optimization", "performance"]
+            categories: ["advanced"]
+            importance: 5
+            parent: "Advanced Topics" 
+            ai-generated: true
+            ai-generated-by: "Claude 3.7 Sonnet"
+            ai-generated-date: "$today"
+            nav_order: "$pos"
+            
+        - filename: "security-best-practices.md"
+          frontMatter:
+            title: "Security best practices"
+            description: "Advanced security considerations when working with the Task Management API."
+            tags: ["security", "best practices"]
+            categories: ["advanced"]
+            importance: 6
+            parent: "Advanced Topics" 
+            ai-generated: false
+            nav_order: "$pos"
+            
+        - filename: "handling-data-consistency.md"
+          frontMatter:
+            title: "Handling data consistency"
+            description: "Strategies for maintaining data consistency when working with the API, including handling race conditions and concurrency."
+            tags: ["data consistency", "concurrency"]
+            categories: ["advanced"]
+            importance: 4
+            parent: "Advanced Topics" 
+            ai-generated: false
+            nav_order: "$pos"
+            
+    - title: "Developer Resources"
+      directory: "developer-resources"
+      purpose: "Additional resources for developers working with the Task Management API, including changelogs, tooling, and code examples."
+      audience: "Developers and technical users who are using the API and looking for additional resources and tools to use with the API."
+      readerLevel: ExperiencedUser
+      topics:
+        - filename: "api-changelog.md"
+          frontMatter:
+            title: "API changelog"
+            description: "History of changes to the Task Management API across versions."
+            tags: ["changelog", "versions"]
+            categories: ["developer-resources"]
+            importance: 3
+            parent: "Developer Resources"
+            ai-generated: false
+            nav_order: "$pos"
+            
+        - filename: "postman-collection.md"
+          frontMatter:
+            title: "Postman collection"
+            description: "How to use the Task Management API Postman collection for testing and development."
+            tags: ["tools", "postman"]
+            categories: ["developer-resources"]
+            importance: 4
+            parent: "Developer Resources"
+            ai-generated: false
+            nav_order: "$pos"
+            
+        - filename: "code-examples.md"
+          frontMatter:
+            title: "Code examples"
+            description: "Example code for common operations in various programming languages including JavaScript, Python, and more."
+            tags: ["code", "examples"]
+            categories: ["developer-resources"]
+            importance: 7
+            parent: "Developer Resources"
+            ai-generated: true
+            ai-generated-by: "Claude 3.7 Sonnet"
+            ai-generated-date: "$today"
+            nav_order: "$pos"
+            
+    - title: "Support & FAQ"
+      directory: "support"
+      purpose: "Support resources, frequently asked questions, and troubleshooting information for the Task Management API."
+      audience: "Developers and technical users who need help with the API."
+      readerLevel: NewUser
+      topics:
+        - filename: "faq.md"
+          frontMatter:
+            title: "Frequently asked questions"
+            description: "Common questions and answers about using the Task Management API."
+            tags: ["faq", "help"]
+            categories: ["support"]
+            importance: 4
+            parent: "Support & FAQ"
+            ai-generated: true
+            ai-generated-by: "Claude 3.7 Sonnet"
+            ai-generated-date: "$today"
+            nav_order: "$pos"
+            
+        - filename: "troubleshooting.md"
+          frontMatter:
+            title: "Troubleshooting"
+            description: "Solutions to common issues encountered when using the Task Management API."
+            tags: ["troubleshooting", "errors"]
+            categories: ["support"]
+            importance: 5
+            parent: "Support & FAQ"
+            ai-generated: true
+            ai-generated-by: "Claude 3.7 Sonnet"
+            ai-generated-date: "$today"
+            nav_order: "$pos"
+            
+        - filename: "support-resources.md"
+          frontMatter:
+            title: "Support resources"
+            description: "How to get help with using the Task Management API, including contact information and community resources."
+            tags: ["support", "help"]
+            categories: ["support"]
+            importance: 3
+            parent: "Support & FAQ"
+            ai-generated: false
+            nav_order: "$pos"
