@@ -21,8 +21,8 @@ const anthropic = new Anthropic({
 });
 
 // Constants
-const CONFIG_PATH = '/doc_support/_ai_doc_set.yaml';
-const DOCS_OUTPUT_DIR = '/docs';
+const CONFIG_PATH = './doc_support/_ai_doc_set.yaml';
+const DOCS_OUTPUT_DIR = './docs';
 
 // This limits the topics to generate to a specific set for testing purposes
 
@@ -54,6 +54,7 @@ async function main() {
 }
 
 async function loadConfig() {
+  console.log(`Loading configuration: ${CONFIG_PATH}`);
   const configFile = await fs.readFile(CONFIG_PATH, 'utf8');
   return yaml.load(configFile);
 }
@@ -71,6 +72,7 @@ async function fetchOpenApiSpec(specUrl) {
 }
 
 async function createDirectoryStructure(config) {
+    console.log(`Creating directory structure in ${DOCS_OUTPUT_DIR}...`);
   // Create root docs directory if it doesn't exist
   await fs.mkdir(DOCS_OUTPUT_DIR, { recursive: true });
   
@@ -140,7 +142,10 @@ async function generateFile(topic, config, apiSpec, outputDir, section = null) {
   const prompt = createPromptForFile(topic, config, apiSpec, section);
   
   // Generate content using Claude API
-  const content = await generateContentWithClaude(prompt, config.global.aiModel);
+  console.log(`file prompt: ${prompt}`);
+  const aiModel = config.global.aiModel || 'claude-3-7-sonnet-20250219';
+  console.log(`Using AI model: ${aiModel}`);
+  const content = await generateContentWithClaude(prompt, aiModel);
   
   // Write the file
   await writeFile(topic, outputDir, content);
@@ -197,9 +202,12 @@ function createPromptForFile(topic, config, apiSpec, section) {
 async function generateContentWithClaude(prompt, model) {
   try {
     console.log('Sending request to Claude API...');
+    console.log(`Prompt: ${prompt}`);
+    console.log(`Model: ${model}`);
+    
     const response = await anthropic.messages.create({
-      model: "claude-3-7-sonnet-20250219",
-      max_tokens: 4000,
+      model: model,
+      max_tokens: 40000,
       messages: [
         { role: "user", content: prompt }
       ]
