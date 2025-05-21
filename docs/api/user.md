@@ -1,5 +1,21 @@
 ---
-layout: page
+layout: default
+nav_order: 5
+has_children: true
+has_toc: false
+# tags used by AI files
+title: `user` resource
+description: Information about the `user` resource
+tags: [api]
+categories: [api-reference]
+ai_relevance: high
+importance: 8
+prerequisites: []
+related_pages: [/tutorials/enroll-a-new-user]
+examples: []
+api_endpoints: [/users]
+version: "v1.0"
+last_updated: "2025-05-08"
 ---
 
 # `user` resource

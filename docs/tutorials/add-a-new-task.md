@@ -1,5 +1,20 @@
 ---
-layout: page
+layout: default
+nav_order: 1
+parent: Tutorials
+# tags used by AI files
+title: Add a new task
+description: Add a `task` resource to the service
+tags: [api]
+categories: [tutorial]
+ai_relevance: high
+importance: 6
+prerequisites: [/before-you-start-a-tutorial, /api/user, /api/task]
+related_pages: []
+examples: []
+api_endpoints: [POST /tasks]
+version: "v1.0"
+last_updated: "2025-05-08"
 ---
 
 # Tutorial: Add a new task
